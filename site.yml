@@ -1,0 +1,12 @@
+---
+- hosts: signal-host
+  become: yes
+
+  roles:
+    - { role: zulu_crypto_extension }
+    - { role: signal_client}
+
+
+
+
+

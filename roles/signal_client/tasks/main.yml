@@ -1,0 +1,51 @@
+---
+# tasks file for signal_client
+- name: Ensure target directory
+  file:
+    path: "{{ signal_target_dir }}"
+    state: directory
+    owner: "{{ os_user }}"
+    group: "{{ os_group }}"
+    mode: 0755
+  tags: [ 'never', 'setupsignal' ]
+
+- name: Create the download link
+  set_fact:
+    signal_cli_download_url: "https://github.com/AsamK/signal-cli/releases/download/v{{signal_cli_version}}/signal-cli-{{signal_cli_version}}.tar.gz"
+  tags: [ 'never', 'setupsignal' ]
+
+
+- name: Download and extract signal-client
+  unarchive:
+    copy: no
+    src: "{{ signal_cli_download_url }}"
+    dest: "{{ signal_target_dir }}/"
+  tags: [ 'never', 'setupsignal' ]
+
+- name: Create symlink to signal client
+  file:
+    src: "{{ signal_target_dir }}/signal-cli-{{signal_cli_version}}/bin/signal-cli"
+    dest: "/usr/local/bin/signal-cli"
+    state: link
+  tags: [ 'never', 'setupsignal' ]
+
+
+
+
+- name: "Register phone number"
+  shell: "sudo signal-cli --config {{ signal_target_dir }} -u {{ phone_number }} register --voice"
+  tags: [ 'never', 'registernumber' ]
+
+
+
+- name: "Verify phone number"
+  shell: "sudo signal-cli --config {{ signal_target_dir }} -u {{ phone_number }} verify {{ verification_code }}"
+  tags: [ 'never', 'verifynumber' ]
+
+
+- name: "Ensure proper permissions on signal config"
+  file:
+    path: "{{ signal_target_dir }}/data"
+    recurse: true
+    mode: a+rw
+  tags: [ 'never', 'verifynumber' ]

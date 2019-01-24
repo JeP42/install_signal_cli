@@ -1,0 +1,19 @@
+---
+
+- name: "Download and extract zulu crypto extension kit to tmp"
+  unarchive:
+    copy: no
+    src: "{{ zulu_crypto_extension_kit_download_url }}"
+    dest: "/tmp/"
+  tags: [ 'never', 'zulucrypto' ]
+
+
+- name: "Copy policies to JRE"
+  command: "cp -r /tmp/ZuluJCEPolicies/. {{ zulu_jre_home }}/lib/security/"
+  tags: [ 'never', 'zulucrypto' ]
+
+
+
+
+
+

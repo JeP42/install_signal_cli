@@ -1,0 +1,7 @@
+signal_target_dir: "/var/lib/signal-cli"
+
+os_user: "pi"
+os_group: "pi"
+
+signal_cli_version: "0.6.2"
+
